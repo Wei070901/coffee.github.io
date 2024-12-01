@@ -155,3 +155,43 @@ class ShoppingCart {
 
 // 初始化購物車
 const cart = new ShoppingCart(); 
+
+// 漢堡選單功能
+const hamburger = document.getElementById('hamburger');
+const navContainer = document.querySelector('.nav-container');
+const body = document.body;
+
+// 漢堡選單點擊事件
+hamburger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    hamburger.classList.toggle('active');
+    navContainer.classList.toggle('active');
+    body.classList.toggle('menu-open');
+    console.log('Menu toggled:', navContainer.classList.contains('active'));
+});
+
+// 點擊選單項目時關閉選單
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navContainer.classList.remove('active');
+        body.classList.remove('menu-open');
+    });
+});
+
+// 點擊頁面其他地方時關閉選單
+document.addEventListener('click', (e) => {
+    if (navContainer.classList.contains('active') && 
+        !navContainer.contains(e.target) && 
+        !hamburger.contains(e.target)) {
+        hamburger.classList.remove('active');
+        navContainer.classList.remove('active');
+        body.classList.remove('menu-open');
+    }
+});
+
+// 防止選單內部點擊事件冒泡
+navContainer.addEventListener('click', (e) => {
+    e.stopPropagation();
+}); 
