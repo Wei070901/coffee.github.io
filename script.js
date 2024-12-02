@@ -1,8 +1,10 @@
 class ShoppingCart {
     constructor() {
-        this.items = [];
+        const savedCart = localStorage.getItem('cartItems');
+        this.items = savedCart ? JSON.parse(savedCart) : [];
         this.total = 0;
         this.init();
+        this.updateCart();
     }
 
     init() {
@@ -44,6 +46,9 @@ class ShoppingCart {
             this.items.push(product);
         }
         
+        // 保存到 localStorage
+        localStorage.setItem('cartItems', JSON.stringify(this.items));
+        
         // 添加購物車圖標彈跳動畫
         this.cartIcon.classList.add('bounce');
         setTimeout(() => {
@@ -73,6 +78,8 @@ class ShoppingCart {
 
     removeItem(id) {
         this.items = this.items.filter(item => item.id !== id);
+        // 更新 localStorage
+        localStorage.setItem('cartItems', JSON.stringify(this.items));
         this.updateCart();
     }
 
@@ -82,8 +89,11 @@ class ShoppingCart {
             item.quantity += change;
             if (item.quantity <= 0) {
                 this.removeItem(id);
+            } else {
+                // 更新 localStorage
+                localStorage.setItem('cartItems', JSON.stringify(this.items));
+                this.updateCart();
             }
-            this.updateCart();
         }
     }
 
@@ -128,9 +138,7 @@ class ShoppingCart {
             this.showNotification('購物車是空的！');
             return;
         }
-        // 將購物車資料存儲到 localStorage
-        localStorage.setItem('cartItems', JSON.stringify(this.items));
-        // 跳轉到結帳頁面
+        // 不需要重複存儲，因為已經在 localStorage 中了
         window.location.href = 'checkout.html';
     }
 
@@ -153,8 +161,10 @@ class ShoppingCart {
     }
 }
 
-// 初始化購物車
-const cart = new ShoppingCart(); 
+// 確保全局只有一個購物車實例
+if (!window.cart) {
+    window.cart = new ShoppingCart();
+}
 
 // 漢堡選單功能
 const hamburger = document.getElementById('hamburger');

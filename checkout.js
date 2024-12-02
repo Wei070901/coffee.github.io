@@ -37,6 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 在結帳頁面讀取購物車數據
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    displayCartItems(cart);
+
     function goToStep(step) {
         // 隱藏當前步驟的內容
         const currentContent = document.querySelector(`#step${currentStep}`);
@@ -257,5 +261,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         field.classList.add('error');
         field.parentNode.appendChild(errorDiv);
+    }
+
+    function displayCartItems(cart) {
+        // 顯示購物車內容的邏輯...
+    }
+
+    // 結帳完成後清空購物車
+    function clearCart() {
+        localStorage.removeItem('cart');
+        updateCartDisplay();
     }
 }); 
