@@ -1713,21 +1713,24 @@ main {
 
 /* 會員頁面樣式 */
 .member-page {
-    padding: 4rem 2rem;
+    padding: 8rem 2rem 4rem;
     background-color: #f9f5f0;
     min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
 }
 
 .member-container {
     max-width: 500px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .form-container {
     background: #fff;
-    padding: 2rem;
+    padding: 2.5rem;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .form-container h2 {
@@ -1795,6 +1798,10 @@ main {
 
 /* 響應式設計 */
 @media (max-width: 768px) {
+    .member-page {
+        padding: 6rem 1rem 4rem;
+    }
+    
     .member-container {
         padding: 0 1rem;
     }
