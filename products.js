@@ -41,13 +41,19 @@ document.addEventListener('DOMContentLoaded', function() {
         productsToRender.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'coffee-card';
+            productCard.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'BUTTON') {
+                    window.location.href = `product-detail.html?id=${product.id}`;
+                }
+            });
+            
             productCard.innerHTML = `
                 <img src="${product.image}" alt="${product.name}">
                 <div class="roast-level">${product.roastLevel}</div>
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>
                 <p class="price">NT$ ${product.price}</p>
-                <button onclick="addToCart(${product.id})">加入購物車</button>
+                <button onclick="cart.addItem(${JSON.stringify(product).replace(/"/g, '&quot;')})">加入購物車</button>
             `;
             productsGrid.appendChild(productCard);
         });

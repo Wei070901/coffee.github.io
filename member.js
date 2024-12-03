@@ -201,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.reload();
         }
     }
-
     // 初始化會員系統
     const memberSystem = new MemberSystem();
 }); 
