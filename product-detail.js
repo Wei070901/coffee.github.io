@@ -187,6 +187,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // 加入收藏功能
+    document.getElementById('addToWishlistBtn').addEventListener('click', () => {
+        const wishlistItem = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image
+        };
+
+        // 確保全局只有一個收藏夾實例
+        if (!window.wishlist) {
+            window.wishlist = new Wishlist();
+        }
+        window.wishlist.addItem(wishlistItem);
+
+        // 顯示通知
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = '商品已加入收藏！';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.remove();
+            }, 300);
+        }, 2000);
+    });
+
     // 渲染相關商品
     const relatedProductsContainer = document.getElementById('relatedProducts');
     Object.values(products)
@@ -212,4 +245,19 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             relatedProductsContainer.appendChild(productCard);
         });
-}); 
+});
+
+// 定義收藏夾類
+class Wishlist {
+    constructor() {
+        const savedWishlist = localStorage.getItem('wishlistItems');
+        this.items = savedWishlist ? JSON.parse(savedWishlist) : [];
+    }
+
+    addItem(item) {
+        if (!this.items.find(existingItem => existingItem.id === item.id)) {
+            this.items.push(item);
+            localStorage.setItem('wishlistItems', JSON.stringify(this.items));
+        }
+    }
+} 

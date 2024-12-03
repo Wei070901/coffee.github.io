@@ -89,6 +89,60 @@ document.addEventListener('DOMContentLoaded', function() {
                     targetContent.style.display = 'block';
                 }
             };
+
+            // 初始化訂單記錄
+            this.orderHistory = [
+                {
+                    orderId: '202310010001',
+                    date: '2023-10-01',
+                    total: 950,
+                    items: [
+                        { name: '衣索比亞耶加雪菲', quantity: 1, price: 450 },
+                        { name: '哥倫比亞supremo', quantity: 1, price: 500 }
+                    ],
+                    status: '已完成'
+                },
+                {
+                    orderId: '202310020002',
+                    date: '2023-10-02',
+                    total: 480,
+                    items: [
+                        { name: '瓜地馬拉安提瓜', quantity: 1, price: 480 }
+                    ],
+                    status: '處理中'
+                }
+            ];
+
+            // 顯示訂單記錄
+            this.displayOrderHistory();
+
+            this.wishlist = this.loadWishlist();
+            this.displayWishlist();
+        }
+
+        displayOrderHistory() {
+            const orderList = document.querySelector('.order-list');
+            orderList.innerHTML = '';
+
+            this.orderHistory.forEach(order => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'order-item';
+                orderElement.innerHTML = `
+                    <h4>訂單編號: ${order.orderId}</h4>
+                    <p>日期: ${order.date}</p>
+                    <p>總計: NT$ ${order.total}</p>
+                    <p>狀態: ${order.status}</p>
+                    <button onclick="memberSystem.viewOrderDetails('${order.orderId}')">查看詳情</button>
+                `;
+                orderList.appendChild(orderElement);
+            });
+        }
+
+        viewOrderDetails(orderId) {
+            const order = this.orderHistory.find(o => o.orderId === orderId);
+            if (order) {
+                alert(`訂單詳情:\n\n${order.items.map(item => `${item.name} x${item.quantity} - NT$${item.price}`).join('\n')}\n\n總計: NT$${order.total}`);
+            }
         }
 
         handleLogin() {
@@ -199,6 +253,49 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 重新導向到首頁或重新載入頁面
             window.location.reload();
+        }
+
+        // 加載收藏清單
+        loadWishlist() {
+            const savedWishlist = localStorage.getItem('wishlistItems');
+            return savedWishlist ? JSON.parse(savedWishlist) : [];
+        }
+
+        // 顯示收藏清單
+        displayWishlist() {
+            const wishlistGrid = document.querySelector('.wishlist-grid');
+            wishlistGrid.innerHTML = '';
+
+            this.wishlist.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'wishlist-item';
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <h4>${item.name}</h4>
+                    <p>NT$ ${item.price}</p>
+                    <button class="remove-btn">移除</button>
+                `;
+                itemElement.addEventListener('click', () => {
+                    window.location.href = `product-detail.html?id=${item.id}`;
+                });
+
+                // 獲取“移除”按鈕並添加事件處理程序
+                const removeBtn = itemElement.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', (event) => {
+                    event.stopPropagation(); // 阻止事件冒泡
+                    this.removeFromWishlist(item.id);
+                });
+
+                wishlistGrid.appendChild(itemElement);
+            });
+        }
+
+        // 從收藏清單中移除項目
+        removeFromWishlist(id) {
+            this.wishlist = this.wishlist.filter(item => item.id !== id);
+            localStorage.setItem('wishlistItems', JSON.stringify(this.wishlist));
+            this.displayWishlist();
+            this.showNotification('已從收藏清單移除');
         }
     }
     // 初始化會員系統
