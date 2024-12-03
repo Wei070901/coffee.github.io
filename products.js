@@ -294,4 +294,92 @@ document.addEventListener('DOMContentLoaded', function() {
     navContainer.addEventListener('click', (e) => {
         e.stopPropagation();
     }); 
+
+    // 新增評價系統
+    class ReviewSystem {
+        constructor() {
+            this.reviews = [];
+        }
+
+        // 新增評價
+        addReview(productId, userId, rating, comment) {
+            const review = {
+                id: Date.now(),
+                productId,
+                userId,
+                rating,
+                comment,
+                date: new Date(),
+                likes: 0
+            };
+            this.reviews.push(review);
+            this.updateProductRating(productId);
+        }
+
+        // 更新商品評分
+        updateProductRating(productId) {
+            const productReviews = this.reviews.filter(r => r.productId === productId);
+            const avgRating = productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length;
+            // 更新商品評分顯示
+        }
+    }
+
+    // 新增搜尋功能
+    class SearchSystem {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            const searchBar = `
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="搜尋商品...">
+                    <button onclick="search()"><i class="fas fa-search"></i></button>
+                </div>
+            `;
+            
+            this.addSearchEventListener();
+        }
+
+        // 搜尋功能
+        search(query) {
+            return products.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase()) ||
+                product.description.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+
+        // 添加即時搜尋監聽器
+        addSearchEventListener() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                const results = this.search(query);
+                this.updateSearchResults(results);
+            });
+        }
+    }
+
+    // 新增社群分享功能
+    class SocialSharing {
+        constructor() {
+            this.init();
+        }
+
+        init() {
+            const shareButtons = `
+                <div class="social-share">
+                    <button onclick="shareOnFacebook()"><i class="fab fa-facebook"></i></button>
+                    <button onclick="shareOnLine()"><i class="fab fa-line"></i></button>
+                    <button onclick="shareOnTwitter()"><i class="fab fa-twitter"></i></button>
+                </div>
+            `;
+        }
+
+        // 分享到 Facebook
+        shareOnFacebook(productUrl) {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}`;
+            window.open(url, '_blank');
+        }
+    }
 }); 

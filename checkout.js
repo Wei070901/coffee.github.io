@@ -272,4 +272,35 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('cart');
         updateCartDisplay();
     }
+
+    // 新增優惠券系統
+    class CouponSystem {
+        constructor() {
+            this.coupons = new Map();
+        }
+
+        // 新增優惠券輸入框
+        addCouponInput() {
+            const couponSection = `
+                <div class="coupon-section">
+                    <input type="text" id="couponCode" placeholder="請輸入優惠碼">
+                    <button onclick="applyCoupon()">套用</button>
+                </div>
+            `;
+        }
+
+        // 驗證優惠券
+        validateCoupon(code) {
+            return this.coupons.has(code) && !this.coupons.get(code).used;
+        }
+
+        // 套用優惠券折扣
+        applyCoupon(code, total) {
+            if (this.validateCoupon(code)) {
+                const discount = this.coupons.get(code).discount;
+                return total * (1 - discount);
+            }
+            return total;
+        }
+    }
 }); 
